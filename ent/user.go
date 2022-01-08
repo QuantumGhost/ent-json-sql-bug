@@ -27,7 +27,7 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 	for i := range columns {
 		switch columns[i] {
 		case user.FieldProperty:
-			values[i] = new([]byte)
+			values[i] = new(schema.Property)
 		case user.FieldID:
 			values[i] = new(sql.NullInt64)
 		default:
@@ -52,7 +52,7 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			}
 			u.ID = int(value.Int64)
 		case user.FieldProperty:
-			if value, ok := values[i].(*[]byte); !ok {
+			if value, ok := values[i].(*schema.Property); !ok {
 				return fmt.Errorf("unexpected type %T for field property", values[i])
 			} else if value != nil && len(*value) > 0 {
 				if err := json.Unmarshal(*value, &u.Property); err != nil {
